@@ -3,6 +3,7 @@ const Author = require('../models/author');
 const Genre = require('../models/genre');
 const BookInstance = require('../models/bookinstance');
 const { body, validationResult } = require("express-validator");
+const debug = require('debug')('book');
 
 const async = require('async');
 const { bookinstance_list } = require('./bookinstanceController');
@@ -26,6 +27,7 @@ exports.index = (req, res) =>{
     }
   },
   (err, results) => {
+    debug(`index error: ${err}`);
     res.render('index', { title: 'Local Library Home', error: err, data: results });
   });
 };
