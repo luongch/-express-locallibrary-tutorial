@@ -2,6 +2,7 @@ const Author = require('../models/author');
 const async = require("async");
 const Book = require("../models/book");
 const { body, validationResult } = require("express-validator");
+const debug = require('debug')('author');
 
 // Display list of all Authors.
 exports.author_list = function(req, res, next) {
@@ -9,7 +10,10 @@ exports.author_list = function(req, res, next) {
   Author.find()
     .sort([['family_name', 'ascending']])
     .exec(function (err, list_authors) {
-      if (err) { return next(err); }
+      if (err) { 
+        debug(`author_list error: ${err}`);
+        return next(err); 
+      }
       //Successful, so render
       res.render('author_list', { title: 'Author List', author_list: list_authors });
     });
@@ -30,12 +34,14 @@ exports.author_detail = (req, res, next) => {
     (err, results) => {
       if (err) {
         // Error in API usage.
+        debug(`update error: ${err}`);
         return next(err);
       }
       if (results.author == null) {
         // No results.
         const err = new Error("Author not found");
         err.status = 404;
+        debug(`author_detail error: ${err}`);
         return next(err);
       }
       // Successful, so render.
@@ -104,6 +110,7 @@ exports.author_create_post = [
     });
     author.save((err) => {
       if (err) {
+        debug(`author_create error: ${err}`);
         return next(err);
       }
       // Successful - redirect to new author record.
@@ -126,6 +133,7 @@ exports.author_delete_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`author_delete_get error: ${err}`);
         return next(err);
       }
       if (results.author == null) {
@@ -155,6 +163,7 @@ exports.author_delete_post = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
+        debug(`author_delete_post error: ${err}`);
         return next(err);
       }
       // Success
@@ -192,6 +201,7 @@ exports.author_update_get = (req, res, next) => {
     },
     (err, results) => {
       if(err) {
+        debug(`author_update_get error: ${err}`);
         return next(next)
       }
       if (results.author == null) {
@@ -252,6 +262,7 @@ exports.author_update_post = [
         },
         (err, results) => {
           if(err) {
+            debug(`author_update_post error: ${err}`);
             return next(next)
           }
           if (results.author == null) {
