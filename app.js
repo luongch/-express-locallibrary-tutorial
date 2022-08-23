@@ -24,6 +24,7 @@ mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 debug(`finished setting up mongodb connection`);
+console.log("mongodb done loading")
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
